@@ -14,8 +14,10 @@ zigzag = Zig_Zag_Pattern + 1;
 [py_BG, py_FG] = BDR_py(D_BG, D_FG);
 [mu_BG, Sigma_BG, mun_BG, SigmaN_BG] = BDR_ms(D_BG, mu0_BG, Sigma0);
 [mu_FG, Sigma_FG, mun_FG, SigmaN_FG] = BDR_ms(D_FG, mu0_FG, Sigma0);
-a_BG = BDR_a(Sigma_BG + SigmaN_BG, py_BG, 64);
-a_FG = BDR_a(Sigma_FG + SigmaN_FG, py_FG, 64);
+a_BG_BDR = BDR_a(Sigma_BG + SigmaN_BG, py_BG, 64);
+a_FG_BDR = BDR_a(Sigma_FG + SigmaN_FG, py_FG, 64);
+a_BG = BDR_a(Sigma_BG, py_BG, 64);
+a_FG = BDR_a(Sigma_FG, py_FG, 64);
 
 for i = 1 : 255
     for j = 1 : 270
@@ -23,7 +25,7 @@ for i = 1 : 255
         x(zigzag) = window;
         d_BG = BDR_d(x, Sigma_BG + SigmaN_BG, mun_BG);
         d_FG = BDR_d(x, Sigma_FG + SigmaN_FG, mun_FG);
-        if (d_BG + a_BG > d_FG + a_FG)
+        if (d_BG + a_BG_BDR > d_FG + a_FG_BDR)
             calculatedImg1(i, j) = 1;
         end
         d_BG = BDR_d(x, Sigma_BG, mun_BG);
