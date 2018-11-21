@@ -5,6 +5,8 @@ load('TrainingSamplesDCT_subsets_8.mat');
 load('Alpha.mat');
 load('Prior_1.mat');
 
+load('TrainingSamplesDCT_8_new.mat');
+
 
 asz = size(alpha);
 asz = asz(2);
@@ -13,6 +15,10 @@ Sigma0 = zeros(64, 64);
 for i = 1:64
     Sigma0(i, i) = W0(i);
 end
+
+% e = zeros(3);
+% [e(1), e(2), e(3)] = BDR(TrainsampleDCT_BG, TrainsampleDCT_FG, mu0_BG, mu0_FG, Sigma0*alpha(1));
+
 
 e11 = zeros(3,9);
 for i = 1:9
