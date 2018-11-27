@@ -4,23 +4,19 @@ clear;
 load('TrainingSamplesDCT_subsets_8.mat');
 load('Alpha.mat');
 load('Prior_1.mat');
-
 load('TrainingSamplesDCT_8_new.mat');
 
 
 asz = size(alpha);
 asz = asz(2);
 
-Sigma0 = zeros(64, 64);
+Sigma0 = zeros(64, 64);    % set the Sigma0
 for i = 1:64
     Sigma0(i, i) = W0(i);
 end
 
-% e = zeros(3);
-% [e(1), e(2), e(3)] = BDR(TrainsampleDCT_BG, TrainsampleDCT_FG, mu0_BG, mu0_FG, Sigma0*alpha(1));
-
-
-e11 = zeros(3,9);
+% call the BDR outside function to draw 8 figures
+e11 = zeros(3,9); % store 3 kind of solution's result with 9 different alpha
 for i = 1:9
    [e11(1,i), e11(2,i), e11(3,i)] = BDR(D1_BG, D1_FG, mu0_BG, mu0_FG, Sigma0*alpha(i));
 end

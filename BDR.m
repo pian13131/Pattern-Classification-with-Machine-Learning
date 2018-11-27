@@ -1,6 +1,6 @@
-function [e1, e2, e3] = BDR(D_BG,D_FG,mu0_BG,mu0_FG,Sigma0)
-%UNTITLED5 Summary of this function goes here
-%   Detailed explanation goes here
+function [e1, e2, e3] = BDR(D_BG,D_FG,mu0_BG,mu0_FG,Sigma0) % receive 2 datasets, 2 mu0, Sigma0
+% BDR calculate error for 3 kind of solutions with 9 different alpha values
+
 load('Zig-Zag Pattern.txt');
 correctImg = imread('cheetah_mask.bmp');
 calculatedImg1 = zeros(255, 270);
@@ -11,7 +11,8 @@ A = im2double(A);
 Apad = padarray(A,[7 7],'symmetric','post'); % Pad the origin image
 zigzag = Zig_Zag_Pattern + 1;
 
-[py_BG, py_FG] = BDR_py(D_BG, D_FG);
+% get the prior of class, mu, Sigma, mu_n, Sigma_n, a, with sub functions
+[py_BG, py_FG] = BDR_py(D_BG, D_FG); 
 [mu_BG, Sigma_BG, mun_BG, SigmaN_BG] = BDR_ms(D_BG, mu0_BG, Sigma0);
 [mu_FG, Sigma_FG, mun_FG, SigmaN_FG] = BDR_ms(D_FG, mu0_FG, Sigma0);
 a_BG_BDR = BDR_a(Sigma_BG + SigmaN_BG, py_BG, 64);
@@ -19,20 +20,24 @@ a_FG_BDR = BDR_a(Sigma_FG + SigmaN_FG, py_FG, 64);
 a_BG = BDR_a(Sigma_BG, py_BG, 64);
 a_FG = BDR_a(Sigma_FG, py_FG, 64);
 
+% traverse all pixels and use different dicision solutions
 for i = 1 : 255
-    for j = 1 : 270
+    for j = 1 : 260
         window = dct2(Apad(i:i+7, j:j+7), 8, 8);
         x(zigzag) = window;
+        % Bayes
         d_BG = BDR_d(x, Sigma_BG + SigmaN_BG, mun_BG);
         d_FG = BDR_d(x, Sigma_FG + SigmaN_FG, mun_FG);
         if (d_BG + a_BG_BDR > d_FG + a_FG_BDR)
             calculatedImg1(i, j) = 1;
         end
+        % MAP
         d_BG = BDR_d(x, Sigma_BG, mun_BG);
         d_FG = BDR_d(x, Sigma_FG, mun_FG);
         if (d_BG + a_BG > d_FG + a_FG)
             calculatedImg2(i, j) = 1;
         end
+        % ML
         d_BG = BDR_d(x, Sigma_BG, mu_BG);
         d_FG = BDR_d(x, Sigma_FG, mu_FG);
         if (d_BG + a_BG > d_FG + a_FG)
@@ -41,12 +46,12 @@ for i = 1 : 255
     end
 end
 
-% Calculate the error for 64 dimension version and 8 dimension version
+% Calculate the error for 3 kind of solution result
 eB2F1 = 0;% the times that the back point was misclassified as front
 eF2B1 = 0;
-eB2F2 = 0;% the times that the back point was misclassified as front
+eB2F2 = 0;
 eF2B2 = 0;
-eB2F3 = 0;% the times that the back point was misclassified as front
+eB2F3 = 0;
 eF2B3 = 0;
 numB = 0;% the number of back points
 numF = 0;
@@ -89,20 +94,20 @@ e3 = py_FG*eF2B3/numF + py_BG*eB2F3/numB;
 end
 
 function [a] = BDR_a(s,py,t)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%BDR_a calculate the a in the BDR
+
 a = log((2*pi)^t*det(s)) - 2*log(py);
 end
 
 function [d] = BDR_d(x, s, mu)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%BDR_d calculate the d in the BDR
+
 d = (x - mu)/s*(x - mu)';
 end
 
 function [py_BG,py_FG] = BDR_py(D_BG,D_FG)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+%BDR_py calculate the prior for each class
+
 sz = size(D_BG);
 szBG = sz(1);
 sz = size(D_FG);
@@ -112,8 +117,8 @@ py_FG = 1 - py_BG;
 end
 
 function [mu, s,mun,sn] = BDR_ms(D, mu0, s0)
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+%BDR_ms calculate the Sigma, mu, Sigma_n, mu_n
+
 s = cov(D);
 mu = mean(D);
 n = size(D);
