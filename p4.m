@@ -3,16 +3,15 @@ clear;
 load('TrainingSamplesDCT_8_new.mat');
 D_BG = TrainsampleDCT_BG;
 D_FG = TrainsampleDCT_FG;
-sz = size(D_BG);
-szBG = sz(1);
-sz = size(D_FG);
-szFG = sz(1);
+[szBG, ~] = size(D_BG);
+[szFG, ~] = size(D_FG);
 py_BG = szBG/(szBG + szFG);
 py_FG = 1 - py_BG;
 
-
-[pi_BG, mu_BG, Sigma_BG] = calh(D_BG);
-[pi_FG, mu_FG, Sigma_FG] = calh(D_FG);
+d = 64;
+c = 8;
+[pi_BG, mu_BG, Sigma_BG] = calh(D_BG,d,c);
+[pi_FG, mu_FG, Sigma_FG] = calh(D_FG,d,c);
 
 load('Zig-Zag Pattern.txt');
 correctImg = imread('cheetah_mask.bmp');
@@ -25,7 +24,7 @@ for i = 1 : 255
     for j = 1 : 260
         window = dct2(Apad(i:i+7, j:j+7), 8, 8);
         x(zigzag) = window;
-        if py_FG*calp(x, mu_FG, Sigma_FG, pi_FG) > py_BG*calp(x, mu_BG, Sigma_BG, pi_BG)
+        if py_FG*calp(x(1:d), mu_FG, Sigma_FG, pi_FG) > py_BG*calp(x(1:d), mu_BG, Sigma_BG, pi_BG)
             calculatedImg(i, j) = 1;
         end
     end
