@@ -1,57 +1,22 @@
 clc;
 clear;
-load('TrainingSamplesDCT_8_new.mat');
-D_BG = TrainsampleDCT_BG;
-D_FG = TrainsampleDCT_FG;
-[szBG, ~] = size(D_BG);
-[szFG, ~] = size(D_FG);
-py_BG = szBG/(szBG + szFG);
-py_FG = 1 - py_BG;
-
-d = 64;
-c = 8;
-[pi_BG, mu_BG, Sigma_BG] = calh(D_BG,d,c);
-[pi_FG, mu_FG, Sigma_FG] = calh(D_FG,d,c);
-
-load('Zig-Zag Pattern.txt');
-correctImg = imread('cheetah_mask.bmp');
-calculatedImg = zeros(255, 270);
-A = imread("cheetah.bmp");
-A = im2double(A);
-Apad = padarray(A,[7 7],'symmetric','post'); % Pad the origin image
-zigzag = Zig_Zag_Pattern + 1;
-for i = 1 : 255
-    for j = 1 : 260
-        window = dct2(Apad(i:i+7, j:j+7), 8, 8);
-        x(zigzag) = window;
-        if py_FG*calp(x(1:d), mu_FG, Sigma_FG, pi_FG) > py_BG*calp(x(1:d), mu_BG, Sigma_BG, pi_BG)
-            calculatedImg(i, j) = 1;
-        end
-    end
+D = [1 2 4 8 16 24 32 40 48 56 64];
+% C = [1 2 4 8 16 32];
+e1 = zeros(25,11);
+for i=1:11
+   e1(:,1) = cale25(D(i),8);
 end
+plot(D,e1);
+xlabel('Dimension')  %x?????
+ylabel('Error')
 
-% Calculate the error for 3 kind of solution result
-eB2F = 0;% the times that the back point was misclassified as front
-eF2B = 0;
-numB = 0;% the number of back points
-numF = 0;
 
-for i = 1 : 255
-    for j = 1 : 270
-        
-        if correctImg(i, j) == 255
-            numF = numF + 1;
-        else
-            numB = numB + 1;
-        end
-        
-        if calculatedImg(i, j)==0 && correctImg(i, j)==255
-            eF2B = eF2B + 1;
-        end
-        if calculatedImg(i, j)==1 && correctImg(i, j)==0
-            eB2F = eB2F + 1;
-        end
-    end        
-end
 
-e = py_FG*eF2B/numF + py_BG*eB2F/numB;
+
+
+
+
+
+
+
+
