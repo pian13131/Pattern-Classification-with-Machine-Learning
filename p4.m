@@ -27,29 +27,32 @@ end
 
 D = [1 2 4 8 16 24 32 40 48 56 64];
 
-e1 = zeros(25,11);
-for i=1:11
-   e1(:,i) = reshape(cale25(D(i),8),25,1);
-end
-for i = 1:5
-    figure;
-    plot(D,e1((i-1)*5+1:i*5,:));
-    xlabel('Dimension')
-    ylabel('Error')
-    title(['Error vs Dimension FG',mat2str(i)]);
-end
-
-
-% C = [1 2 4 8 16 32];
-% e2 = zeros(6,11);
-% for i=1:6
-%    e2(:,i) = reshape(cale25(64,C(i)),25,1);
+% e1 = zeros(25,11);
+% for i=1:11
+%    e1(:,i) = reshape(cale25(D(i),8),25,1);
 % end
-% figure;
-% plot(C,e2);
-% xlabel('Cl')
-% ylabel('Error')
-% title('Error vs Dimension');
+% for i = 1:5
+%     figure;
+%     plot(D,e1((i-1)*5+1:i*5,:));
+%     xlabel('Dimension')
+%     ylabel('Error')
+%     title(['Error vs Dimension FG',mat2str(i)]);
+% end
+
+
+C = [1 2 4 8 16 32];
+e2 = zeros(6,11);
+for i=1:6
+    for j=1:11
+        [P_BG, P_FG] = EM(D(j),C(i));
+        e2(i,j) = cale(P_BG,P_FG);
+    end
+end
+figure;
+plot(D,e2);
+xlabel('Dimension')
+ylabel('Error')
+title('Error vs Dimension');
 
 
 
