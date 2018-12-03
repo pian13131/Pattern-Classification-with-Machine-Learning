@@ -2,7 +2,7 @@ clc;
 clear;
 
 load('Zig-Zag Pattern.txt');
-A = imread("cheetah.bmp");
+A = imread('cheetah.bmp');
 A = im2double(A);
 global Apad zigzag correctImg D_BG D_FG py_BG py_FG dct;
 Apad = padarray(A,[7 7],'symmetric','post');
@@ -31,17 +31,17 @@ e1 = zeros(25,11);
 for i=1:11
    e1(:,i) = reshape(cale25(D(i),8),25,1);
 end
-% for i = 1:5
-%     figure;
-%     plot(D,e1((i-1)*5+1:i*5,:));
-%     xlabel('Dimension')
-%     ylabel('Error')
-%     title(['Error vs Dimension FG',mat2str(i)]);
-% end
+for i = 1:5
+    figure;
+    plot(D,e1((i-1)*5+1:i*5,:));
+    xlabel('Dimension')
+    ylabel('Error')
+    title(['Error vs Dimension FG',mat2str(i)]);
+end
 
 
 % C = [1 2 4 8 16 32];
-% e2 = zeros(25,6);
+% e2 = zeros(6,11);
 % for i=1:6
 %    e2(:,i) = reshape(cale25(64,C(i)),25,1);
 % end
