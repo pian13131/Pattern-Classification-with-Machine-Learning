@@ -29,7 +29,7 @@ for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
    mu(i,:) = random('Normal',mean(D(:,d)),0.001);
 end
-loop = 1;
+loop = 3;
 for p = 1:loop
     for i = 1:row
        for j = 1:c
