@@ -29,7 +29,7 @@ for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
    mu(i,:) = random('Normal',mean(D(:,d)),0.001);
 end
-loop = 5;
+loop = 1;
 for p = 1:loop
     for i = 1:row
        for j = 1:c
@@ -45,8 +45,7 @@ for p = 1:loop
     for j = 1:c
        mu_new(j,:) = sum(H(j,:)'.*D(:,1:d))/sum(H(j,:));
        pi_new(j) = mean(H(j,:));
-       dg = sum(H(j,:)'.*(D(:,1:d) - mu(j,:)).^2)./sum(H(j,:));
-       Sigma_new(j,:,:) = diag(dg);
+       Sigma_new(j,:,:) = diag(sum(H(j,:)'.*(D(:,1:d) - mu(j,:)).^2)./sum(H(j,:)));
     end
     mu = mu_new;
     pi = pi_new;
