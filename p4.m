@@ -41,14 +41,14 @@ D = [1 2 4 8 16 24 32 40 48 56 64];
 
 
 C = [1 2 4 8 16 32];
-e2 = zeros(6,11);
+% e2 = zeros(6,11);
 e = zeros(1,11);
-% for i=1:6
+for i=1:6
     for j=1:11
-        [P_BG, P_FG] = EM(D(j),8);
+        [P_BG, P_FG] = EM(D(j),4);
         e(j) = cale(P_BG,P_FG);
     end
-% end
+end
 figure;
 plot(D,e);
 xlabel('Dimension')
@@ -56,7 +56,8 @@ ylabel('Error')
 title('Error vs Dimension');
 
 
-
+% [P_BG, P_FG] = EM(64,4);
+% e = cale(P_BG,P_FG);
 
 
 

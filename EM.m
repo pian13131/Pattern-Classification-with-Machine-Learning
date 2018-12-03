@@ -2,6 +2,7 @@ function [P_BG, P_FG] = EM(d,c)
 global py_BG py_FG D_BG D_FG dct;
 
 [pi_BG, mu_BG, Sigma_BG] = calh(D_BG,d,c);
+disp('------')
 [pi_FG, mu_FG, Sigma_FG] = calh(D_FG,d,c);
 
 P_BG = zeros(255,260);
@@ -16,7 +17,6 @@ end
 end
 
 function [pi, mu, Sigma] = calh(D,d,c)
-
 [row, ~] = size(D);
 H = zeros(c, row);
 pi = rand(1,c);
@@ -27,7 +27,7 @@ sigma2 = diag(diag(sigma2));
 Sigma = zeros(c,d,d);
 for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
-   mu(i,:) = random('Normal', mean(D(:,1:d)), 0.0001);
+   mu(i,:) = random('Normal', mean(D(:,1:d)), 0);
 end
 loop = 10;
 for p = 1:loop
@@ -51,6 +51,7 @@ for p = 1:loop
        dg = sum(h'.*(xd - u).^2)./sum(h);
        Sigma_new(j,:,:) = diag(dg);
     end
+    calp(D(100,1:d), mu, Sigma, pi)
     mu = mu_new;
     pi = pi_new;
     Sigma = Sigma_new;
