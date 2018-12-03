@@ -1,19 +1,55 @@
 clc;
 clear;
+
+load('Zig-Zag Pattern.txt');
+A = imread("cheetah.bmp");
+A = im2double(A);
+global Apad zigzag correctImg D_BG D_FG py_BG py_FG dct;
+Apad = padarray(A,[7 7],'symmetric','post');
+zigzag = Zig_Zag_Pattern + 1;
+correctImg = imread('cheetah_mask.bmp');
+load('TrainingSamplesDCT_8_new.mat');
+D_BG = TrainsampleDCT_BG;
+D_FG = TrainsampleDCT_FG;
+[szBG, ~] = size(D_BG);
+[szFG, ~] = size(D_FG);
+py_BG = szBG/(szBG + szFG);
+py_FG = 1 - py_BG;
+
+dct = zeros(255,260,64);
+for i = 1 : 255
+    for j = 1 : 260
+        window = dct2(Apad(i:i+7, j:j+7), 8, 8);
+        x(zigzag) = window;
+        dct(i,j,:) = x;
+    end
+end
+
 D = [1 2 4 8 16 24 32 40 48 56 64];
-% C = [1 2 4 8 16 32];
+
 e1 = zeros(25,11);
 for i=1:11
-   e1(:,1) = cale25(D(i),8);
+   e1(:,i) = reshape(cale25(D(i),8),25,1);
 end
-plot(D,e1);
-xlabel('Dimension')  %x?????
-ylabel('Error')
+% for i = 1:5
+%     figure;
+%     plot(D,e1((i-1)*5+1:i*5,:));
+%     xlabel('Dimension')
+%     ylabel('Error')
+%     title(['Error vs Dimension FG',mat2str(i)]);
+% end
 
 
-
-
-
+% C = [1 2 4 8 16 32];
+% e2 = zeros(25,6);
+% for i=1:6
+%    e2(:,i) = reshape(cale25(64,C(i)),25,1);
+% end
+% figure;
+% plot(C,e2);
+% xlabel('Cl')
+% ylabel('Error')
+% title('Error vs Dimension');
 
 
 
