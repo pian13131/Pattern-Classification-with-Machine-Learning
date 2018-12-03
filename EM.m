@@ -45,7 +45,7 @@ for p = 1:loop
     for j = 1:c
        mu_new(j,:) = sum(H(j,:)'.*D(:,1:d))/sum(H(j,:));
        pi_new(j) = mean(H(j,:));
-       Sigma_new(j,:,:) = diag(sum(H(j,:)'.*(D(:,1:d) - mu(j,:)).^2)./sum(H(j,:)));
+       Sigma_new(j,:,:) = diag(sum(H(j,:)'.*(D(:,1:d) - mu(j,:))'*(D(:,1:d) - mu(j,:)))./sum(H(j,:)));
     end
     mu = mu_new;
     pi = pi_new;
