@@ -9,9 +9,9 @@ sigma2 = diag(diag(sigma2));
 Sigma = zeros(c,d,d);
 for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
-   mu(i,:) = random('Normal', mean(D(:,1:d)), 0);
+   mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-6);
 end
-loop = 200;
+loop = 3;
 for p = 1:loop
     for i = 1:row
        for j = 1:c
