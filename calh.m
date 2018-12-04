@@ -4,14 +4,14 @@ H = zeros(c, row);
 pi = ones(1,c);
 pi = pi/c;
 mu = zeros(c, d);
-sigma2 = cov(D);   % how to random sigma???;
+sigma2 = cov(D);
 sigma2 = diag(diag(sigma2));
 Sigma = zeros(c,d,d);
 for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
    mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-5);
 end
-% lkhd = sum(sum(callike(pi, mu, Sigma)));
+
 loop = 300;
 for p = 1:loop
     for i = 1:row
@@ -25,6 +25,7 @@ for p = 1:loop
     mu_new = zeros(c, d);
     Sigma_new = zeros(c,d,d);
     pi_new = zeros(1,c);
+    
     for j = 1:c
        xd = D(:,1:d);
        h = H(j,:);
@@ -35,24 +36,13 @@ for p = 1:loop
        dg(dg<1e-10) = 1e-10;
        Sigma_new(j,:,:) = diag(dg);
     end
-%     calp(D(100,1:d), mu, Sigma, pi)
-%     lkhd_new = sum(sum(callike(pi_new, mu_new, Sigma_new)));
-%     t = (lkhd_new - lkhd)/lkhd;
-%     t
-%     p
-%     if abs(t) < 0.00001
-%        break; 
-%     end
     t = norm(mu_new - mu)/norm(mu);
-%     p
-%     t
-    if t < 1e-6 && p>100
+    if t < 1e-6
        p
        break; 
     end
     mu = mu_new;
     pi = pi_new;
     Sigma = Sigma_new;
-%     lkhd = lkhd_new;
 end
 end

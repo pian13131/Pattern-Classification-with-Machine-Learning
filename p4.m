@@ -1,60 +1,49 @@
 clc;
 clear;
-
-load('Zig-Zag Pattern.txt');
-A = imread('cheetah.bmp');
-A = im2double(A);
-global Apad zigzag correctImg D_BG D_FG py_BG py_FG dct;
-Apad = padarray(A,[7 7],'symmetric','post');
-zigzag = Zig_Zag_Pattern + 1;
-correctImg = imread('cheetah_mask.bmp');
-load('TrainingSamplesDCT_8_new.mat');
-D_BG = TrainsampleDCT_BG;
-D_FG = TrainsampleDCT_FG;
-[szBG, ~] = size(D_BG);
-[szFG, ~] = size(D_FG);
-py_BG = szBG/(szBG + szFG);
-py_FG = 1 - py_BG;
-
-dct = zeros(255,260,64);
-for i = 1 : 255
-    for j = 1 : 260
-        window = dct2(Apad(i:i+7, j:j+7), 8, 8);
-        x(zigzag) = window;
-        dct(i,j,:) = x;
-    end
-end 
+init();
+%-------- Part 1 --------%
 D = [1 2 4 8 16 24 32 40 48 56 64];
 
-% e1 = zeros(25,11);
-% for i=1:11
-%    e1(:,i) = reshape(cale25(D(i),8),25,1);
-% end
-% for i = 1:5
-%     figure;
-%     plot(D,e1((i-1)*5+1:i*5,:));
-%     xlabel('Dimension')
-%     ylabel('Error')
-%     title(['Error vs Dimension FG',mat2str(i)]);
-% end
+e1 = zeros(5,5,11);
+P_BG55 = zeros(5, 11, 255, 260);
+P_FG55 = zeros(5, 11, 255, 260);
+for j=1:5
+    [pi_BG, mu_BG, Sigma_BG] = calh(D_BG,64,8);
+    [pi_FG, mu_FG, Sigma_FG] = calh(D_FG,64,8);
+    for i=1:11
+        d = D(i);
+        P_BG55(j,i,:,:) = py_BG * callike(pi_BG, mu_BG(:,1:d), Sigma_BG(:,1:d,1:d));
+        P_FG55(j,i,:,:) = py_FG * callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d));
+    end
+end
+for i=1:5
+   for j=1:5
+      for k=
+      e1(i,j,:) =  
+   end
+end
+for i = 1:5
+    figure;
+    plot(D,e1((i-1)*5+1:i*5,:));
+    xlabel('Dimension')
+    ylabel('Error')
+    title(['Error vs Dimension FG',mat2str(i)]);
+end
 
-
+%-------- Part 2 --------%
 C = [1 2 4 8 16 32];
 e2 = zeros(6,11);
-for j = 5:6
-% e = zeros(1,11);
+for j = 1:6
 c = C(j);
 [pi_BG, mu_BG, Sigma_BG] = calh(D_BG,64,c);
 [pi_FG, mu_FG, Sigma_FG] = calh(D_FG,64,c);
 
-% for j=1:6
 for i=1:11
     d = D(i);
     P_BG = py_BG * callike(pi_BG, mu_BG(:,1:d), Sigma_BG(:,1:d,1:d));
     P_FG = py_FG * callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d));
     e2(j,i) = cale(P_BG,P_FG);
 end
-% end
 
 end
 figure;
@@ -62,10 +51,4 @@ plot(D,e2);
 xlabel('Dimension')
 ylabel('Error')
 title('Error vs Dimension');
-
-
-% [P_BG, P_FG] = EM(64,4);
-% e = cale(P_BG,P_FG);
-
-
 
