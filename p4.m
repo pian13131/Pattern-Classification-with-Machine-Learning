@@ -8,7 +8,7 @@ D = [1 2 4 8 16 24 32 40 48 56 64];
 e1 = zeros(5,5,11);
 P_BG55 = zeros(5, 11, 255, 260);
 P_FG55 = zeros(5, 11, 255, 260);
-for j=1:2
+for j=1:5
     [pi_BG, mu_BG, Sigma_BG] = calh(D_BG,64,8);
     [pi_FG, mu_FG, Sigma_FG] = calh(D_FG,64,8);
     for i=1:11
@@ -17,8 +17,8 @@ for j=1:2
         P_FG55(j,i,:,:) = py_FG * callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d));
     end
 end
-for i=1:2
-   for j=1:2
+for i=1:5
+   for j=1:5
       for k=1:11
          P_BG = squeeze(P_BG55(i,k,:,:));
          P_FG = squeeze(P_FG55(j,k,:,:));
@@ -26,7 +26,7 @@ for i=1:2
       end
    end
 end
-for i = 1:2
+for i = 1:5
     figure;
     plot(D,squeeze(e1(i,:,:)));
     xlabel('Dimension')
