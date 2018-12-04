@@ -23,8 +23,7 @@ for i = 1 : 255
         x(zigzag) = window;
         dct(i,j,:) = x;
     end
-end
-
+end 
 D = [1 2 4 8 16 24 32 40 48 56 64];
 
 % e1 = zeros(25,11);
@@ -41,21 +40,25 @@ D = [1 2 4 8 16 24 32 40 48 56 64];
 
 
 C = [1 2 4 8 16 32];
-% e2 = zeros(6,11);
-e = zeros(1,11);
-[pi_BG, mu_BG, Sigma_BG] = calh(D_BG,64,8);
-[pi_FG, mu_FG, Sigma_FG] = calh(D_FG,64,8);
+e2 = zeros(6,11);
+for j = 5:6
+% e = zeros(1,11);
+c = C(j);
+[pi_BG, mu_BG, Sigma_BG] = calh(D_BG,64,c);
+[pi_FG, mu_FG, Sigma_FG] = calh(D_FG,64,c);
 
 % for j=1:6
 for i=1:11
     d = D(i);
     P_BG = py_BG * callike(pi_BG, mu_BG(:,1:d), Sigma_BG(:,1:d,1:d));
     P_FG = py_FG * callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d));
-    e(i) = cale(P_BG,P_FG);
+    e2(j,i) = cale(P_BG,P_FG);
 end
 % end
+
+end
 figure;
-plot(D,e);
+plot(D,e2);
 xlabel('Dimension')
 ylabel('Error')
 title('Error vs Dimension');

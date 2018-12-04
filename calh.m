@@ -1,17 +1,17 @@
 function [pi, mu, Sigma] = calh(D,d,c)
 [row, ~] = size(D);
 H = zeros(c, row);
-pi = rand(1,c);
-pi = pi/(sum(pi));
+pi = ones(1,c);
+pi = pi/c;
 mu = zeros(c, d);
 sigma2 = cov(D);   % how to random sigma???;
 sigma2 = diag(diag(sigma2));
 Sigma = zeros(c,d,d);
 for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
-   mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-6);
+   mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-5);
 end
-lkhd = sum(sum(callike(pi, mu, Sigma)));
+% lkhd = sum(sum(callike(pi, mu, Sigma)));
 loop = 300;
 for p = 1:loop
     for i = 1:row
@@ -20,7 +20,7 @@ for p = 1:loop
        end 
     end
     H = H.*pi';
-    H = H./sum(H);
+    H = H./sum(H,1);
 
     mu_new = zeros(c, d);
     Sigma_new = zeros(c,d,d);
@@ -32,20 +32,27 @@ for p = 1:loop
        mu_new(j,:) = sum(h'.*xd)/sum(h);
        pi_new(j) = mean(h);
        dg = sum(h'.*(xd - u).^2)./sum(h);
+       dg(dg<1e-10) = 1e-10;
        Sigma_new(j,:,:) = diag(dg);
     end
 %     calp(D(100,1:d), mu, Sigma, pi)
-    lkhd_new = sum(sum(callike(pi_new, mu_new, Sigma_new)));
-    t = (lkhd_new - lkhd)/lkhd;
-    t
-    p
-    if abs(t) < 0.0001
-       
+%     lkhd_new = sum(sum(callike(pi_new, mu_new, Sigma_new)));
+%     t = (lkhd_new - lkhd)/lkhd;
+%     t
+%     p
+%     if abs(t) < 0.00001
+%        break; 
+%     end
+    t = norm(mu_new - mu)/norm(mu);
+%     p
+%     t
+    if t < 1e-6 && p>100
+       p
        break; 
     end
     mu = mu_new;
     pi = pi_new;
     Sigma = Sigma_new;
-    lkhd = lkhd_new;
+%     lkhd = lkhd_new;
 end
 end
