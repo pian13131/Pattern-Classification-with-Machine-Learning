@@ -1,8 +1,8 @@
 function [pi, mu, Sigma] = calh(D,d,c)
 [row, ~] = size(D);
 H = zeros(c, row);
-pi = ones(1,c);
-pi = pi/c;
+pi = rand(1,c);
+pi = pi/sum(pi);
 mu = zeros(c, d);
 sigma2 = cov(D);
 sigma2 = diag(diag(sigma2));
@@ -37,12 +37,12 @@ for p = 1:loop
        Sigma_new(j,:,:) = diag(dg);
     end
     t = norm(mu_new - mu)/norm(mu);
-    if t < 1e-6
-       p
+    if t < 1e-5
        break; 
     end
     mu = mu_new;
     pi = pi_new;
     Sigma = Sigma_new;
 end
+p
 end
