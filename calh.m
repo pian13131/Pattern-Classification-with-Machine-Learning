@@ -38,8 +38,9 @@ for p = 1:loop
     lkhd_new = sum(sum(callike(pi_new, mu_new, Sigma_new)));
     t = (lkhd_new - lkhd)/lkhd;
     t
+    p
     if abs(t) < 0.0001
-       p
+       
        break; 
     end
     mu = mu_new;
