@@ -49,8 +49,8 @@ e = zeros(1,11);
 % for j=1:6
 for i=1:11
     d = D(i);
-    P_BG = callike(pi_BG, mu_BG(:,1:d), Sigma_BG(:,1:d,1:d), py_BG);
-    P_FG = callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d), py_FG);
+    P_BG = py_BG * callike(pi_BG, mu_BG(:,1:d), Sigma_BG(:,1:d,1:d));
+    P_FG = py_FG * callike(pi_FG, mu_FG(:,1:d), Sigma_FG(:,1:d,1:d));
     e(i) = cale(P_BG,P_FG);
 end
 % end

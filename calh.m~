@@ -11,8 +11,7 @@ for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
    mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-6);
 end
-lkhd = sum(sum(callike(pi, mu, Sigma)));
-loop = 300;
+loop = 100;
 for p = 1:loop
     for i = 1:row
        for j = 1:c
@@ -35,16 +34,10 @@ for p = 1:loop
        Sigma_new(j,:,:) = diag(dg);
     end
 %     calp(D(100,1:d), mu, Sigma, pi)
-    lkhd_new = sum(sum(callike(pi_new, mu_new, Sigma_new)));
-    t = (lkhd_new - lkhd)/lkhd;
-    t
-    if abs(t) < 0.0001
-       p
-       break; 
-    end
+    sum(sum(callike(pi, mu, Sigma)))
     mu = mu_new;
     pi = pi_new;
     Sigma = Sigma_new;
-    lkhd = lkhd_new;
+    
 end
 end

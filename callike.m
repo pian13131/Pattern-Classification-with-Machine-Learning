@@ -1,11 +1,11 @@
-function [P] = callike(pi, mu, Sigma, py)
+function [P] = callike(pi, mu, Sigma)
 global dct;
 [~, d] = size(mu);
 P = zeros(255,260);
 for i = 1 : 255
     for j = 1 : 260
         x = reshape(dct(i,j,:),1,64);
-        P(i,j) = py*calp(x(1:d), mu, Sigma, pi);
+        P(i,j) = calp(x(1:d), mu, Sigma, pi);
     end
 end
 end
