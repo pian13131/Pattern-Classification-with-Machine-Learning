@@ -1,4 +1,5 @@
 function [e] = cale(P_BG,P_FG)
+%   calculate the PoE
 global py_BG py_FG correctImg;
 calculatedImg = zeros(255, 270);
 

@@ -1,4 +1,5 @@
 function [] = init()
+%   initialization
 load('Zig-Zag Pattern.txt');
 A = imread('cheetah.bmp');
 A = im2double(A);

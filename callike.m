@@ -1,4 +1,5 @@
 function [P] = callike(pi, mu, Sigma)
+%   Calculate the likelihood
 global dct;
 [~, d] = size(mu);
 P = zeros(255,260);

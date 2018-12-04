@@ -1,4 +1,5 @@
 function [pi, mu, Sigma] = calh(D,d,c)
+%   EM, return the trained parameters
 [row, ~] = size(D);
 H = zeros(c, row);
 pi = rand(1,c);
@@ -12,6 +13,7 @@ for i = 1:c
    mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-5);
 end
 
+% EM loop
 loop = 300;
 for p = 1:loop
     for i = 1:row
@@ -36,6 +38,7 @@ for p = 1:loop
        dg(dg<1e-10) = 1e-10;
        Sigma_new(j,:,:) = diag(dg);
     end
+    % set the point of break out
     t = norm(mu_new - mu)/norm(mu);
     if t < 1e-5
        break; 
