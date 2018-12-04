@@ -13,7 +13,7 @@ end
 function [P] = calp(x,u,s,p)
 
 P = 0;
-[sz, ~] = size(p);
+[~, sz] = size(p);
 for j = 1:sz
     P = P + mvnpdf(x, u(j,:), squeeze(s(j,:,:)))*p(j);
 end
