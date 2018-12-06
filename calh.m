@@ -10,7 +10,8 @@ sigma2 = diag(diag(sigma2));
 Sigma = zeros(c,d,d);
 for i = 1:c
    Sigma(i,:,:) = sigma2(1:d,1:d);
-   mu(i,:) = random('Normal', mean(D(:,1:d)), 1e-5);
+   u = mean(D(:,1:d));
+   mu(i,:) = random('Normal', u, abs(u)*0.1);
 end
 
 % EM loop
@@ -39,8 +40,8 @@ for p = 1:loop
        Sigma_new(j,:,:) = diag(dg);
     end
     % set the point of break out
-    t = norm(mu_new - mu)/norm(mu);
-    if t < 1e-5
+    t = norm(mu_new - mu)/norm(mu)+norm(pi_new - pi)/norm(pi);
+    if t < 1e-4
        break; 
     end
     mu = mu_new;
